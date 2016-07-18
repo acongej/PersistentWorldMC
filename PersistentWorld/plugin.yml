@@ -1,0 +1,7 @@
+name: PersistentWorld
+main: com.gmail.qwwupp.PersistentWorld.PersistentWorld
+version: 0.1
+
+commands:
+  hello:
+    description: Says hello.
