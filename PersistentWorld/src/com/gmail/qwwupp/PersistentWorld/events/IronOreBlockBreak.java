@@ -15,12 +15,13 @@ import com.gmail.qwwupp.PersistentWorld.iw.DirectDrop;
 
 
 
-public class BlockBreak implements Listener {
+public class IronOreBlockBreak implements Listener {
 	
 	//create a hashmap to store the location of a block and a counter
 	public static HashMap<Location, Integer> breaksCounter = new HashMap<Location, Integer>(); 
 	public static HashMap<Location, Integer> payoutsCounter = new HashMap<Location, Integer>();
 	
+	public static float publicXP = 0.0f;
 	//create a new instance of directdrop
 	private DirectDrop dd = new DirectDrop();
 
@@ -32,6 +33,7 @@ public class BlockBreak implements Listener {
 		Block block = event.getBlock();
 		Location loc = block.getLocation();
 		Material material = block.getType();
+		
 
 		//if the block was iron ore
 		if (material == Material.IRON_ORE) {
@@ -39,7 +41,7 @@ public class BlockBreak implements Listener {
 			//cancel the event
 			event.setCancelled(true);
 			
-			
+
 			//what should we drop?
 			ItemStack whatToDrop = new ItemStack(Material.IRON_ORE, 1);
 			
@@ -48,6 +50,7 @@ public class BlockBreak implements Listener {
 			int breaksForPayout = 2;
 			
 			int totalPayout = 4;
+			
 
 			//if the counter knows this block exists
 			if (breaksCounter.containsKey(loc)) {
@@ -60,6 +63,12 @@ public class BlockBreak implements Listener {
 				
 				//get the payout counter
 				int ii = payoutsCounter.get(loc);
+				
+				//check if this is the first time the block has been broken
+				if (i == 1 && ii == 0) {
+					player.sendMessage("llf");
+					player.setExp(1.0f);
+				}
 
 				//if the counter hits the payout
 				if (i == breaksForPayout) {
@@ -78,6 +87,7 @@ public class BlockBreak implements Listener {
 						
 						//reset the payout counter
 						payoutsCounter.put(loc, 0);
+						player.setExp(0.0f);
 					}
 				}
 			}
@@ -96,8 +106,14 @@ public class BlockBreak implements Listener {
 			float payoutsCounterf = (float) payoutsCounter.get(loc);
 			//bleh math
 			float xp = 1.0f - (payoutsCounterf / totalPayout);
-			//set xp float 0.0 to 1.0 (percentage of total bar)
-			player.setExp(xp);
+			publicXP = xp;
+			//player.sendMessage(Float.toString(xp));
+		//	if (xp = 0)
+			//if(!(payoutsCounter.get(loc) == 0))	{
+				//set xp float 0.0 to 1.0 (percentage of total bar)
+			//	player.setExp(xp);
+			//}
+			
 			
 			//debug stuff
 			//player.sendMessage("breaks: " + breaksCounter.get(loc));
